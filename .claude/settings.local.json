@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git checkout:*)",
+      "Bash(curl -s \"https://mtg.fandom.com/wiki/Planechase\" | head -200)",
+      "WebFetch(domain:api.scryfall.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(taskkill /F /PID 27256 2>/dev/null; taskkill /F /IM qemu-system-x86_64.exe 2>/dev/null; echo \"done\")",
+      "Bash(cd C:/Users/diego/AndroidStudioProjects/Planeschase && adb devices)",
+      "Read(//c/Users/diego/AndroidStudioProjects/Planeschase/$LOCALAPPDATA/Android/Sdk/**)",
+      "Read(//c/Users/diego/AndroidStudioProjects/Planeschase/$HOME/AppData/Local/Android/Sdk/**)",
+      "Bash(\"$HOME/AppData/Local/Android/Sdk/platform-tools/adb.exe\" devices:*)",
+      "Bash(\"$HOME/AppData/Local/Android/Sdk/platform-tools/adb.exe\" kill-server:*)",
+      "Bash(curl -s \"https://api.scryfall.com/cards/search?q=type%3Aplane+set%3Aopca&order=name\" -o \"C:/Users/diego/AndroidStudioProjects/Planeschase/app/src/main/assets/planes_opca.json\" && echo \"OK\" && wc -c \"C:/Users/diego/AndroidStudioProjects/Planeschase/app/src/main/assets/planes_opca.json\")",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('C:/Users/diego/AndroidStudioProjects/Planeschase/app/src/main/assets/planes_opca.json'\\)\\); print\\(f'Cards: {len\\(d[\\\\\"data\\\\\"]\\)}, has_more: {d[\\\\\"has_more\\\\\"]}'\\)\" 2>/dev/null || python -c \"import json; d=json.load\\(open\\('C:/Users/diego/AndroidStudioProjects/Planeschase/app/src/main/assets/planes_opca.json'\\)\\); print\\(f'Cards: {len\\(d[\\\\\"data\\\\\"]\\)}, has_more: {d[\\\\\"has_more\\\\\"]}'\\)\")"
+    ]
+  }
+}
