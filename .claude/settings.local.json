@@ -14,7 +14,11 @@
       "Bash(\"$HOME/AppData/Local/Android/Sdk/platform-tools/adb.exe\" devices:*)",
       "Bash(\"$HOME/AppData/Local/Android/Sdk/platform-tools/adb.exe\" kill-server:*)",
       "Bash(curl -s \"https://api.scryfall.com/cards/search?q=type%3Aplane+set%3Aopca&order=name\" -o \"C:/Users/diego/AndroidStudioProjects/Planeschase/app/src/main/assets/planes_opca.json\" && echo \"OK\" && wc -c \"C:/Users/diego/AndroidStudioProjects/Planeschase/app/src/main/assets/planes_opca.json\")",
-      "Bash(python3 -c \"import json; d=json.load\\(open\\('C:/Users/diego/AndroidStudioProjects/Planeschase/app/src/main/assets/planes_opca.json'\\)\\); print\\(f'Cards: {len\\(d[\\\\\"data\\\\\"]\\)}, has_more: {d[\\\\\"has_more\\\\\"]}'\\)\" 2>/dev/null || python -c \"import json; d=json.load\\(open\\('C:/Users/diego/AndroidStudioProjects/Planeschase/app/src/main/assets/planes_opca.json'\\)\\); print\\(f'Cards: {len\\(d[\\\\\"data\\\\\"]\\)}, has_more: {d[\\\\\"has_more\\\\\"]}'\\)\")"
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('C:/Users/diego/AndroidStudioProjects/Planeschase/app/src/main/assets/planes_opca.json'\\)\\); print\\(f'Cards: {len\\(d[\\\\\"data\\\\\"]\\)}, has_more: {d[\\\\\"has_more\\\\\"]}'\\)\" 2>/dev/null || python -c \"import json; d=json.load\\(open\\('C:/Users/diego/AndroidStudioProjects/Planeschase/app/src/main/assets/planes_opca.json'\\)\\); print\\(f'Cards: {len\\(d[\\\\\"data\\\\\"]\\)}, has_more: {d[\\\\\"has_more\\\\\"]}'\\)\")",
+      "Bash(\"$HOME/AppData/Local/Android/Sdk/platform-tools/adb.exe\" shell:*)",
+      "Bash(ADB=\"C:/Users/diego/AppData/Local/Android/Sdk/platform-tools/adb.exe\" && \"$ADB\" shell run-as com.carpes.planeschase ls files/planes/ | head -3)",
+      "Bash(curl -s \"https://cards.scryfall.io/normal/front/a/1/a1c7f2eb-0654-46f9-ae3d-11efcac837b8.jpg?1782749452\" -o /tmp/test_plane.jpg && identify /tmp/test_plane.jpg 2>/dev/null || python3 -c \"\nfrom PIL import Image\nimg = Image.open\\('/tmp/test_plane.jpg'\\)\nprint\\(f'Size: {img.size}, Mode: {img.mode}'\\)\n\" 2>/dev/null || echo \"size check not available\")",
+      "Bash(curl -sI \"https://cards.scryfall.io/normal/front/a/1/a1c7f2eb-0654-46f9-ae3d-11efcac837b8.jpg?1782749452\" | grep -i \"content\")"
     ]
   }
 }

@@ -124,18 +124,12 @@ fun PlaneViewerScreen(onBack: () -> Unit) {
                     model = File(plane.image).takeIf { it.exists() },
                     contentDescription = plane.name,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 24.dp, vertical = 48.dp)
-                        .graphicsLayer(
-                            scaleX = 0.9f,
-                            scaleY = 0.9f
-                        )
-                        .clip(RoundedCornerShape(48.dp)),
-                    contentScale = ContentScale.Fit,
+                        .fillMaxWidth()
+                        .align(Alignment.Center)
+                        .clip(RoundedCornerShape(20.dp)),
+                    contentScale = ContentScale.FillWidth,
                     loading = {
-                        Box(Modifier.fillMaxSize()) {
-                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                        }
+                        CircularProgressIndicator()
                     },
                 )
 
