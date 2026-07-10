@@ -1,6 +1,7 @@
 package com.carpes.planeschase.ui.planes
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -57,6 +59,7 @@ fun PlaneViewerScreen(onBack: () -> Unit) {
     var activePoolIds by rememberSaveable { mutableStateOf<List<Int>>(emptyList()) }
     var currentIndex by rememberSaveable { mutableIntStateOf(0) }
     var timedOut by remember { mutableStateOf(false) }
+    var showPlaneDetails by remember { mutableStateOf(false) }
 
     val activePool = remember(dbPlanes, activePoolIds) {
         activePoolIds.mapNotNull { id -> dbPlanes.find { it.id == id } }
@@ -64,7 +67,7 @@ fun PlaneViewerScreen(onBack: () -> Unit) {
 
     LaunchedEffect(dbPlanes) {
         if (dbPlanes.isNotEmpty() && activePoolIds.isEmpty()) {
-            activePoolIds = dbPlanes.shuffled().map { it.id }
+            activePoolIds = dbPlanes.shuffled().take(40).map { it.id }
         }
     }
 
@@ -95,7 +98,7 @@ fun PlaneViewerScreen(onBack: () -> Unit) {
                 val newPoolIds = activePoolIds.filter { it != currentId }
 
                 if (newPoolIds.isEmpty()) {
-                    activePoolIds = dbPlanes.shuffled().map { it.id }
+                    activePoolIds = dbPlanes.shuffled().take(40).map { it.id }
                     currentIndex = 0
                 } else {
                     activePoolIds = newPoolIds
@@ -126,12 +129,64 @@ fun PlaneViewerScreen(onBack: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.Center)
-                        .clip(RoundedCornerShape(20.dp)),
+                        .clip(RoundedCornerShape(20.dp))
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onTap = { showPlaneDetails = !showPlaneDetails }
+                            )
+                        },
                     contentScale = ContentScale.FillWidth,
                     loading = {
                         CircularProgressIndicator()
                     },
                 )
+
+                if (showPlaneDetails) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.9f))
+                            .padding(32.dp)
+                            .pointerInput(Unit) {
+                                detectTapGestures(onTap = { showPlaneDetails = false })
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Text(
+                                text = plane.name,
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = Color.White
+                            )
+                            Text(
+                                text = plane.typeLine,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.LightGray
+                            )
+                            Text(
+                                text = plane.description,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
+                            )
+                            plane.chaosAbility?.let {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Chaos:",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.tertiary
+                                )
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+                }
 
                 IconButton(
                     onClick = onBack,
