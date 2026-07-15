@@ -43,18 +43,25 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.carpes.planeschase.data.local.entity.PlaneEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import kotlin.random.Random
 
 @Composable
-fun PlaneViewerScreen(onBack: () -> Unit) {
+fun PlaneViewerScreen(
+    deckId: Int? = null,
+    onBack: () -> Unit
+) {
     val context = LocalContext.current
+    val db = remember { com.carpes.planeschase.data.local.PlaneschaseDatabase.getInstance(context) }
     
-    val dbPlanes by remember {
-        com.carpes.planeschase.data.local.PlaneschaseDatabase.getInstance(context).planeDao().getAllPlanes()
-    }.collectAsState(initial = emptyList())
+    val planesFlow = remember(deckId) {
+        if (deckId == null) db.planeDao().getAllPlanes()
+        else db.deckDao().getPlanesInDeck(deckId)
+    }
+    val dbPlanes by planesFlow.collectAsState(initial = emptyList())
 
     var activePoolIds by rememberSaveable { mutableStateOf<List<Int>>(emptyList()) }
     var currentIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -94,15 +101,17 @@ fun PlaneViewerScreen(onBack: () -> Unit) {
             // Auto-action and auto-dismiss after a short delay
             delay(1500)
             if (result == DieSide.Planeswalker) {
-                val currentId = activePoolIds[currentIndex]
-                val newPoolIds = activePoolIds.filter { it != currentId }
+                if (activePoolIds.isNotEmpty()) {
+                    val currentId = activePoolIds[currentIndex]
+                    val newPoolIds = activePoolIds.filter { it != currentId }
 
-                if (newPoolIds.isEmpty()) {
-                    activePoolIds = dbPlanes.shuffled().take(40).map { it.id }
-                    currentIndex = 0
-                } else {
-                    activePoolIds = newPoolIds
-                    currentIndex = Random.nextInt(newPoolIds.size)
+                    if (newPoolIds.isEmpty()) {
+                        activePoolIds = dbPlanes.shuffled().take(40).map { it.id }
+                        currentIndex = 0
+                    } else {
+                        activePoolIds = newPoolIds
+                        currentIndex = Random.nextInt(newPoolIds.size)
+                    }
                 }
             }
             rollResult = null
@@ -137,7 +146,9 @@ fun PlaneViewerScreen(onBack: () -> Unit) {
                         },
                     contentScale = ContentScale.FillWidth,
                     loading = {
-                        CircularProgressIndicator()
+                        Box(Modifier.fillMaxSize()) {
+                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                        }
                     },
                 )
 

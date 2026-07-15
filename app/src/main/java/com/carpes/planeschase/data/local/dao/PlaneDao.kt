@@ -13,6 +13,9 @@ interface PlaneDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(planes: List<PlaneEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(plane: PlaneEntity): Long
+
     @Query("SELECT * FROM planes ORDER BY id ASC")
     fun getAllPlanes(): Flow<List<PlaneEntity>>
 
